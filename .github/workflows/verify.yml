@@ -5,8 +5,7 @@ on:
   pull_request:
     branches: [ "*" ]
   push:
-    branches: [ "*" ]
-  workflow_dispatch:
+    branches: [ "master" ]
 
 permissions:
   contents: read
@@ -63,7 +62,7 @@ jobs:
           trivy_command: config
           trivy_target: .
           level: info
-          reporter: github-pr-review
+          reporter: github-pr-check
           filter_mode: nofilter
           fail_level: none
           trivy_flags: "--severity LOW,MEDIUM,HIGH,CRITICAL"
