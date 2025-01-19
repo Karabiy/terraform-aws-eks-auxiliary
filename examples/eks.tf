@@ -150,7 +150,7 @@ module "eks" {
       }
 
       tags = {
-        pool = "worker"
+        pool = "workers"
       }
     }
   }
@@ -163,3 +163,4 @@ resource "aws_security_group" "alb-controller-sg" {
   vpc_id      = var.vpc_id
   # tags        = local.base_tags
 }
+
