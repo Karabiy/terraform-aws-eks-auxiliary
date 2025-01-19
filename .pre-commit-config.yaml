@@ -1,4 +1,36 @@
+# Pre-commit Git hooks - Local Development Safeguard
+#
+# Benefits of pre-commit hooks:
+# 1. Client-Side Validation:
+#    - Catches issues BEFORE they reach CI/CD pipeline
+#    - Immediate feedback without waiting for CI checks
+#    - Prevents pushing non-compliant code to remote
+#
+# 2. Fast Development Cycle:
+#    - Instant validation on commit
+#    - No need to wait for CI pipeline to discover basic issues
+#    - Saves time by catching formatting/linting issues early
+#
+# 3. Consistent Code Quality:
+#    - Enforces standards before code leaves your machine
+#    - Terraform formatting, validation, and linting
+#    - Documentation and security checks
+#
+# To get started:
+# 1. Install pre-commit: `pip install pre-commit`
+# 2. Install hooks: `pre-commit install`
+# 3. First run: `pre-commit run --all-files`
+#
+# CI/CD Integration:
+# - Pre-commit runs in CI against the PR's target branch
+# - Provides additional verification layer
+# - Ensures all developers run pre-commit checks consistently
+# - Catches any issues that might slip through local checks
+#
+# Note: You can bypass hooks with `git commit --no-verify` if needed - it is not recommended and still will be checked in CI/CD
+
 fail_fast: false
+
 repos:
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.96.2
@@ -8,7 +40,6 @@ repos:
         args:
           - --args=-json
           - --args=-no-color
-          - --tf-init-args=-upgrade
           - --tf-init-args=-lockfile=readonly
       - id: terraform_docs
         args:
