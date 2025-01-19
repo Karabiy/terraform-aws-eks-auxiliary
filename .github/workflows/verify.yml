@@ -62,7 +62,7 @@ jobs:
           trivy_command: config
           trivy_target: .
           level: info
-          reporter: github-pr-check
+          reporter: github-pr-annotations
           filter_mode: nofilter
           fail_level: none
           trivy_flags: "--severity LOW,MEDIUM,HIGH,CRITICAL"
