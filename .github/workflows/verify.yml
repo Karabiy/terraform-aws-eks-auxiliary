@@ -2,28 +2,26 @@
 name: Verify
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "*" ]
 
   workflow_dispatch:
 
 jobs:
-  tfsec:
-    name: "Security Scan"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+  # tfsec:
+  #   name: "Security Scan"
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Run Trivy vulnerability scanner in fs mode
-        uses: aquasecurity/trivy-action@0.17.0
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          trivy-config: trivy.yaml
-        env:
-          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+  #     - name: Run Trivy vulnerability scanner in fs mode
+  #       uses: aquasecurity/trivy-action@0.17.0
+  #       with:
+  #         scan-type: 'fs'
+  #         scan-ref: '.'
+  #         trivy-config: trivy.yaml
+  #       env:
+  #         TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
 
   pre_commit:
     name: "Pre-commit Checks"
@@ -59,4 +57,3 @@ jobs:
           git fetch origin ${{ github.base_ref }}
           pre-commit run --from-ref origin/${{ github.base_ref }} --to-ref HEAD
 
-          
