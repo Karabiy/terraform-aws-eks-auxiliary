@@ -2,8 +2,16 @@
 name: Verify
 
 on:
+  pull_request:
+    branches: [ "*" ]
   push:
     branches: [ "*" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
 
 jobs:
   pre_commit:
@@ -39,3 +47,40 @@ jobs:
         run: |
           pre-commit run --all-files --show-diff-on-failure
 
+  security_scan_pr:
+    name: "Security Scan (PR)"
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Trivy with reviewdog
+        uses: reviewdog/action-trivy@v1.13.5
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          trivy_command: config
+          trivy_target: .
+          level: info
+          reporter: github-pr-review
+          filter_mode: nofilter
+          fail_level: none
+          trivy_flags: "--severity LOW,MEDIUM,HIGH,CRITICAL"
+
+  security_scan_push:
+    name: "Security Scan (Push)"
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Trivy scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
