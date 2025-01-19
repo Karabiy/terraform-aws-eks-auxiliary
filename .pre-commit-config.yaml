@@ -5,24 +5,34 @@
 #    - Catches issues BEFORE they reach CI/CD pipeline
 #    - Immediate feedback without waiting for CI checks
 #    - Prevents pushing non-compliant code to remote
+#    - Validates entire codebase by default
 #
 # 2. Fast Development Cycle:
 #    - Instant validation on commit
 #    - No need to wait for CI pipeline to discover basic issues
 #    - Saves time by catching formatting/linting issues early
+#    - Full codebase validation ensures overall consistency
 #
 # 3. Consistent Code Quality:
 #    - Enforces standards before code leaves your machine
 #    - Terraform formatting, validation, and linting
 #    - Documentation and security checks
+#    - Maintains quality across entire codebase
 #
+# Best Practices:
+# - CI always runs against entire codebase (--all-files) to eliminate all risks
+# - Local commits can run on changed files for faster feedback
+# - STRONGLY RECOMMENDED: Run `pre-commit run --all-files` before pushing
+#   This ensures you catch any interdependency issues before CI
+#   Currently, this is not available as a configuration option (or not found during development time), 
+# and needs to check of Issues for the feature request
 # To get started:
 # 1. Install pre-commit: `pip install pre-commit`
 # 2. Install hooks: `pre-commit install`
 # 3. First run: `pre-commit run --all-files`
 #
 # CI/CD Integration:
-# - Pre-commit runs in CI against the PR's target branch
+# - Pre-commit runs in CI against the entire codebase
 # - Provides additional verification layer
 # - Ensures all developers run pre-commit checks consistently
 # - Catches any issues that might slip through local checks
@@ -40,7 +50,7 @@ repos:
         args:
           - --args=-json
           - --args=-no-color
-          - --tf-init-args=-lockfile=readonly
+          - --tf-init-args=-upgrade
       - id: terraform_docs
         args:
           - '--args=--config=.terraform-docs.yml'
